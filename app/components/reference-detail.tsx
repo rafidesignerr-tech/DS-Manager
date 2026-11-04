@@ -8,7 +8,7 @@ import { Time } from "~/components/ui/time";
 type Linked = { id: string; title: string; kind: string };
 
 export function referenceHref(kind: string, id: string): string {
-  return kind === "foundation" ? `/foundations/${id}` : kind === "icon" ? `/icons?selected=${id}` : `/components/${id}`;
+  return kind === "foundation" ? "/foundations" : kind === "icon" ? `/icons?selected=${id}` : `/components/${id}`;
 }
 
 const STATUS_TONE: Record<string, StatusTone> = { stable: "completed", beta: "information", draft: "pending", deprecated: "failed" };

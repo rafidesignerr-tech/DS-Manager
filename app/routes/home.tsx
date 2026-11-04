@@ -21,6 +21,7 @@ import { statusLabel, TASK_STATUSES } from "~/domain/tasks";
 import { formatRelative, plural } from "~/lib/format";
 import { getActor, getDb } from "~/server/request.server";
 import { referenceCounts } from "~/server/reference.server";
+import { allTokens } from "~/foundations/model";
 import { myOpenTaskCount, recentTaskActivity, taskCountsByStatus, listMembers } from "~/server/tasks.server";
 
 export const meta: Route.MetaFunction = () => [{ title: HUB.name }];
@@ -55,7 +56,7 @@ function activityText(a: { action: string; field: string | null; toValue: string
 }
 
 const ENTRY_POINTS = [
-  { to: "/foundations", title: "Foundations", description: "Colors, spacing, typography and other base decisions.", icon: RiPaletteLine },
+  { to: "/foundations", title: "Foundations", description: "Colors, typography, spacing, radius, elevation and layout tokens.", icon: RiPaletteLine },
   { to: "/components", title: "Components", description: "Search, filter and explore how components relate.", icon: RiShapesLine },
   { to: "/icons", title: "Icons", description: "Browse the icon gallery by name and category.", icon: RiGridLine },
 ];
@@ -63,7 +64,7 @@ const ENTRY_POINTS = [
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { counts, team } = loaderData;
   const metrics = [
-    { label: "Foundation entries", value: counts.foundations },
+    { label: "Foundation tokens", value: allTokens().length },
     { label: "Components", value: counts.components },
     { label: "Component categories", value: counts.componentCategories },
     { label: "Icons", value: counts.icons },
@@ -101,7 +102,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             </Card>
           ))}
         </ul>
-        <p className="mt-2 text-paragraph-xs text-text-sub-600">Counts are calculated from the catalog. It currently holds sample entries only.</p>
+        <p className="mt-2 text-paragraph-xs text-text-sub-600">Counts are calculated from the catalog. Foundations come from the tokens file; components and icons are still sample entries.</p>
       </section>
 
       <section aria-labelledby="explore-title" className="space-y-4">

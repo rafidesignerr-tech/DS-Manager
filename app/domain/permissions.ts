@@ -36,7 +36,8 @@ export type Permission =
   | "changelog.draft"
   | "changelog.publish"
   | "notifications.view"
-  | "profile.edit";
+  | "profile.edit"
+  | "foundation.track";
 
 const PUBLIC: Permission[] = ["reference.view", "changelog.viewPublished", "feedback.submit"];
 
@@ -52,6 +53,8 @@ const CONTRIBUTOR: Permission[] = [
   "changelog.viewDrafts",
   "notifications.view",
   "profile.edit",
+  // Airtable-style tracking: everyone on the team updates token status (roles set by the manager).
+  "foundation.track",
   ...(POLICY.contributorCanComplete ? (["task.complete"] as const) : []),
   ...(POLICY.contributorCanAddFeedbackNotes ? (["feedback.addNote"] as const) : []),
   ...(POLICY.contributorCanDraftChangelog ? (["changelog.draft"] as const) : []),

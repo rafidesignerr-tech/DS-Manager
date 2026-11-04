@@ -4,7 +4,10 @@ export default [
   // Public
   index("routes/home.tsx"),
   route("foundations", "routes/foundations.tsx"),
-  route("foundations/:id", "routes/foundations.$id.tsx"),
+  route("foundations/updates", "routes/foundations.updates.tsx"),
+  route("foundations/track", "routes/foundations.track.ts"),
+  route("foundations/token/:id", "routes/foundations.token.$id.tsx"),
+  route("foundations/:section", "routes/foundations.$section.tsx"),
   route("components", "routes/components.tsx"),
   route("components/:id", "routes/components.$id.tsx"),
   route("icons", "routes/icons.tsx"),

@@ -313,3 +313,25 @@ export const changelogReference = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.entryId, t.referenceId] })],
 );
+
+/* ------------------------------------------------------------------ */
+/* Foundation token tracking. Tokens themselves are read-only and live */
+/* in app/foundations/tokens.json; this table holds the team's status  */
+/* per token, keyed by the token id (stable while the path is stable). */
+/* ------------------------------------------------------------------ */
+
+export const tokenTracking = sqliteTable(
+  "token_tracking",
+  {
+    tokenId: text("token_id").primaryKey(),
+    designStatus: text("design_status", { enum: ["todo", "in_progress", "in_review", "done"] }).notNull().default("todo"),
+    webStatus: text("web_status", { enum: ["todo", "in_progress", "in_review", "done"] }).notNull().default("todo"),
+    mobileStatus: text("mobile_status", { enum: ["todo", "in_progress", "in_review", "done"] }).notNull().default("todo"),
+    assigneeId: text("assignee_id").references(() => user.id, { onDelete: "set null" }),
+    notes: text("notes").notNull().default(""),
+    docsUrl: text("docs_url"),
+    updatedById: text("updated_by_id").references(() => user.id, { onDelete: "set null" }),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("token_tracking_assignee_idx").on(t.assigneeId)],
+);

@@ -1,0 +1,552 @@
+{
+  "colors": {
+    "overview": [
+      {
+        "title": "Color Principles",
+        "subtitle": "These ten principles define how colors are applied and organized across the system.",
+        "columns": ["Principle", "Definition", "What it controls", "Perceptual effect", "Use rule", "Avoid", "Why"],
+        "rows": [
+          ["Hierarchy", "Direct attention through layered color weight.", "Contrast between foreground, interactive, and surface elements.", "High contrast draws attention; low contrast hides it.", "Use highest contrast for primary content and actions.", "Elements competing with the same color weight.", "Without contrast, no element appears as a priority."],
+          ["Semantic Intent", "Each role has a shared meaning.", "Distribution of roles across brand, state, neutral, and data palettes.", "Builds learned associations that reduce cognitive load over time.", "Use status colors (success, warning, error, info) only for their intended purpose.", "Reusing a semantic color for decoration or brand expression.", "Consistent meaning makes the interface predictable and reliable."],
+          ["Accessible Contrast", "Text and interactive elements meet contrast ratios with their backgrounds.", "Text-to-surface pairs and icon-to-background pairs.", "Ensures readability across vision types and lighting conditions.", "Check text-to-background pairs during design and implementation; target WCAG AA minimum.", "Assuming brand colors pass contrast without checking.", "Failed contrast excludes users and creates legal liability."],
+          ["Role Separation", "Brand, neutral, state, and data colors serve separate, non-overlapping purposes.", "Token boundaries within the palette.", "Prevents visual ambiguity about what a color signals.", "Use brand colors for identity and primary actions, neutrals for surfaces and content, and state colors only for responses.", "Mixing role categories within one component.", "Overlapping roles affect communication clarity across the system."],
+          ["State Legibility", "Interaction states appear clearly through color changes that meet contrast.", "Hover, active, focus, disabled, and selected states.", "Users recognize interactivity and response; the interface feels interactive.", "Define a clear lightness or saturation change for each state; do not rely on color alone to signal focus.", "States that differ only by color without changing contrast.", "Inaccessible states exclude keyboard users and assistive technologies."],
+          ["Theme Adaptability", "Semantic tokens keep meaning and contrast across light and dark modes.", "Token values tied to each theme mode.", "The interface looks intentional in every mode, not just a simple inverse.", "Bind each semantic token to suitable theme metals and test contrast in both modes.", "Using metals directly in components and fixed hex values.", "Semantic tokens separate meaning from the specific color, making theme changes safe."],
+          ["Saturation Restraint", "High-saturation colors are used as accents, not filled across large areas.", "Density of brand and state color usage.", "Accents stay strong only when used sparingly; overuse causes saturation fatigue.", "Limit saturated color to interactive controls, status indicators, and primary alerts.", "Saturated backgrounds or full-width fills outside intended brand moments.", "Restraint preserves the visual impact of every accent."],
+          ["Surface Depth", "Lightness indicates elevation across background layers without relying only on shadows.", "Background token progression from base to upper layers.", "Users read layered surfaces as separate depth paths, supporting spatial navigation.", "Use sequential background grades for panels, dialogs, and cards.", "Random surface colors outside the scale or skipping grade levels.", "Stable depth cues guide users through complex nested layouts."],
+          ["Meaning Stability", "A semantic token's role never changes across contexts or components.", "Token reuse and label organization.", "Expected color usage reduces decision fatigue for designers and engineers.", "Review new components against existing token roles before introducing new tokens.", "Using the same token with a different meaning in different components.", "Unstable meaning breaks the shared language the token layer creates."],
+          ["Signal Independence", "Any information communicated by color is also communicated by shape, label, style, or icon.", "Error states, status indicators, and data visualizations.", "All users, including those with color vision deficiency, receive the full message.", "Pair color-based signals with a text label or icon.", "Success/failure states relying only on red and green without additional visual coding.", "8% of males have color vision deficiency; color-only signals exclude a large user segment."]
+        ]
+      },
+      {
+        "title": "Token Structure",
+        "subtitle": "Defines a two-layer token structure: Primitive and Semantic. It explains what each layer contains and its purpose.",
+        "columns": ["Layer", "Definition", "Purpose", "Contains", "Does not contain", "Core question", "Example"],
+        "rows": [
+          ["Primitives", "Raw color values in token groups, including solids and filters.", "Defines allowed color values as a stable reference independent of mode.", "Solid and filter color tokens with sequential increments.", "Semantic roles, property styling, context, and mode.", "What color value exists in the system?", "color.alpha.black.400 color.brand.50"],
+          ["Semantic", "Semantic tokens organized by property type and purpose, resolved per mode.", "Assigns the correct Primitive to each property, role, and state, and switches this mapping between modes.", "Property-grouped tokens for bg, fg, border, focus, and effect, constrained by property type.", "Raw color values and mode-dependent reference group names.", "Which color governs this property, role, and mode?", "color.bg.base.surface color.border.base.medium"]
+        ]
+      },
+      {
+        "title": "Color Roles",
+        "subtitle": "Color roles define consistent behavior across layout, content, and accessibility layers.",
+        "columns": ["Role", "Purpose", "Use for", "Rules", "Example"],
+        "rows": [
+          ["Background", "Define surface hierarchy.", "Use for pages, containers, overlays, and notifications.", "Use elevation and contrast.", "color.bg.base.canvas"],
+          ["Text", "Show content hierarchy.", "Use for headings, body text, helper text, and notifications.", "Ensure readability and contrast.", "color.fg.base.secondary"],
+          ["Border", "Separate structure and define edges.", "Use for dividers, inputs, cards, focus, and states.", "Support structure without becoming the primary signal.", "color.border.base.strong"],
+          ["Icon", "Convey process and state.", "Use for navigation, status, comments, and guidance.", "Match nearby text and avoid conflicting emphasis.", "color.fg.base.primary"],
+          ["Focus", "Show focus and interaction.", "Use for focus rings, navigation states, and selection borders.", "Reserve for focus visibility only and avoid decoration.", "color.focus.default"]
+        ]
+      },
+      {
+        "title": "Intent Roles",
+        "subtitle": "Semantic intent through color token roles for consistent tone, risk signaling, and system feedback.",
+        "columns": ["Role", "Purpose", "Use for", "Rules", "Example"],
+        "rows": [
+          ["Base", "Defines the default interface meaning", "Default surfaces, basic content, borders, and inactive icons", "Keep it as the system default", "color.bg.base.section"],
+          ["Accent", "Adds brand emphasis and highlights primary interactions", "Primary actions, key states, links, and active indicators", "Use it sparingly to keep emphasis clear", "color.fg.intent.accent.strong"],
+          ["Positive", "Signals success and reassuring responses", "Success alerts, confirmations, completed flows, and positive indicators", "Reserve it only for successful or completed states", "color.bg.intent.positive.strong"],
+          ["Warning", "Signals caution, high attention, or recoverable risk", "Warning banners, incomplete states, and risky settings", "Indicate attention without signaling irreversible failure", "color.fg.intent.warning"],
+          ["Negative", "Signals destructive intent, critical issues, or failed outcomes", "Error states, delete buttons, invalid inputs, and critical alerts", "Reserve it only for high-risk or failure-related meanings", "color.border.intent.negative"],
+          ["Info", "Provides neutral guidance, system status, and informative responses", "Help messages, info banners, and neutral status alerts", "Keep it calm and non-urgent", "color.bg.intent.info.subtle"]
+        ]
+      },
+      {
+        "title": "Layering",
+        "subtitle": "Layers create structural depth across background surfaces, supporting containment and order.",
+        "columns": ["Layer", "Depth level", "Relationship", "Common patterns", "Token"],
+        "rows": [
+          ["Canvas", "0", "Root level behind all content", "App shell, page background, main workspace", "color.bg.base.canvas"],
+          ["Section", "0", "Divides Canvas to separate low-contrast sections", "Section backgrounds, grouped content areas, secondary regions", "color.bg.base.section"],
+          ["Surface", "1", "Default bounded level above Canvas", "Cards, panels, units, form groups", "color.bg.base.surface"],
+          ["Raised", "2", "Prominent bounded level above regular surfaces", "Elevated panels, highlighted containers, side sheets", "color.bg.base.raised"],
+          ["Overlay", "3", "Dimming background behind active front surfaces", "Modal backdrop, sheet scrim, dimmed states", "color.bg.base.overlay"],
+          ["Elevated", "4", "Highest front level above Overlay for isolated interactions", "Modals, dialogs, floating panels, command panels", "color.bg.base.elevated"]
+        ]
+      }
+    ],
+    "usage": [
+      {
+        "title": "Usage Rules",
+        "subtitle": "Rules for using color tokens across content, structure, meaning, and interaction.",
+        "columns": ["Role", "Tokens", "Definition", "Do", "Avoid", "Why"],
+        "rows": [
+          ["Foreground base", "color.fg.base.primary color.fg.base.secondary color.fg.base.tertiary", "Text and icon tokens for content hierarchy", "Use primary for main content. Use secondary and tertiary for less important text.", "Do not use for meaning or disabled states.", "Base tokens are for hierarchy, not meaning."],
+          ["Border base", "color.border.base.subtle color.border.base.medium color.border.base.strong", "Neutral border tokens for structure", "Use subtle, default, and strong for neutral structure.", "Do not use for meaning or intent.", "Neutral borders hide meaning."],
+          ["Foreground intent", "color.fg.intent.accent.strong color.fg.intent.positive color.fg.intent.warning color.fg.intent.negative color.fg.intent.info", "Text and icon tokens for meaning", "Use for inline feedback and status text.", "Do not use for body copy or decoration.", "Intent tokens make every message look important."],
+          ["Border intent", "color.border.intent.accent color.border.intent.positive color.border.intent.warning color.border.intent.negative color.border.intent.info", "Border tokens for meaning", "Use when the border must show meaning.", "Do not use for neutral structure.", "Intent borders add false meaning to structure."],
+          ["On color", "color.fg.base.on-color primary", "Foreground tokens for strong fills", "Use on strong fills that need contrast.", "Do not use on subtle or neutral surfaces.", "Default text fails contrast on strong fills."],
+          ["On tint", "color.fg.base.on-tint", "Foreground tokens for light-tinted surfaces", "Use when on-color contrast is too low.", "Do not use on dark or strong fills.", "On-tint is for mid-contrast surfaces."],
+          ["Inverse", "color.fg.base.inverse color.border.base.inverse", "Tokens for reversed-contrast contexts", "Use on dark or inverted surfaces.", "Do not use on light or neutral surfaces.", "Inverse tokens are for reversed contrast."],
+          ["Disabled", "color.bg.base.disabled color.fg.base.disabled color.border.base.disabled", "Tokens for unavailable states", "Use for unavailable controls and states.", "Do not use for emphasis or de-emphasis.", "Disabled tokens mean unavailable, not just less important."],
+          ["Focus", "color.focus.default color.focus.inverse color.focus.negative", "Tokens for keyboard focus", "Use default for standard focus, inverse for dark surfaces, and negative for destructive actions.", "Do not use for decoration, selection, or hover.", "Focus tokens are for keyboard navigation, not decoration."]
+        ]
+      },
+      {
+        "title": "Invalid Pairings",
+        "subtitle": "Explicit invalid token combinations that break role logic, semantic coherence, contrast integrity, or accessibility behavior.",
+        "columns": ["Token", "On", "Description"],
+        "rows": [
+          ["color.fg.base.on-color", "Neutral, subtle, and other low-emphasis surface contexts, such as canvas layers, default surfaces, or subtle semantic backgrounds", "On-color foregrounds are reserved for strong fills and other high-emphasis colored surfaces. Using them on neutral or subtle surfaces breaks role intent and weakens readable hierarchy"],
+          ["color.fg.base.primary color.fg.base.secondary color.fg.base.tertiary", "High-emphasis colored surfaces, such as branded fills, strong intent backgrounds, or critical status containers", "Base text and icon tokens are not the default foreground treatment for strong fills. High-emphasis surfaces require dedicated on-color foregrounds to preserve contrast and role consistency"],
+          ["color.fg.base.primary color.fg.base.secondary color.fg.base.tertiary", "Reversed-contrast surfaces, such as inverse containers, dark overlays, or inverted regions", "Inverse surfaces require inverse foreground treatment. Default text and icon tokens break reversed-contrast logic and create inconsistent theme behavior"],
+          ["color.border.base.subtle color.border.base.medium color.border.base.strong", "Reversed-contrast structural contexts, such as inverse cards, dark sections, or elevated inverse containers", "Inverse surfaces require inverse border treatment. Default neutral borders can lose edge clarity and weaken structural separation"],
+          ["color.fg.base.inverse color.border.base.inverse", "Standard light-surface contexts, such as canvas, neutral containers, or default cards", "Inverse tokens are reserved for reversed-contrast contexts. Using them on standard surfaces creates false inversion and disrupts visual hierarchy"],
+          ["color.border.base.subtle", "High-emphasis structural separation, such as strong semantic fills, branded blocks, or critical banners", "Subtle neutral borders do not provide sufficient separation on high-emphasis fills. Use inverse or validated semantic border treatment where structure must remain visible"],
+          ["color.border.intent.*", "Neutral structural framing, such as layout grouping, card boundaries, or default field outlines", "Intent borders are semantic signals, not structural separators. Using them as default UI framing injects unintended meaning into neutral states"],
+          ["color.fg.intent.*", "Long-form primary reading contexts, such as body copy, page text, or persistent product content and decorative or default UI icons", "Intent fg tokens are semantic accents, not default reading or icon colors. Using them as primary body content or default icons overloads meaning and reduces signal clarity"],
+          ["Any intent token with conflicting semantic meaning", "Semantic surfaces with a different meaning, such as positive content on negative backgrounds or warning icons in info containers", "Cross-intent pairings break semantic coherence. A token family must not communicate one meaning while the surrounding surface communicates another"],
+          ["Readable foreground content", "Depth and interaction layers, such as overlays, scrims, or modal backdrops", "Overlay surfaces are depth and interaction layers, not readable content surfaces. Content must be placed on a dedicated container above the overlay"],
+          ["Any disabled token", "Enabled, interactive, or standard hierarchy contexts, such as active controls, default content, or selectable UI", "Disabled tokens indicate non-availability, not reduced emphasis. Using them outside disabled states weakens hierarchy and misrepresents interactivity"],
+          ["color.focus.default", "High-emphasis colored surfaces, such as strong fills, branded actions, or critical semantic regions", "Standard focus treatment may fail contrast requirements on high-emphasis surfaces. Use inverse focus or a validated context-specific focus treatment instead"],
+          ["color.focus.inverse", "Standard light-surface contexts, such as default forms, neutral cards, or page-level containers", "Inverse focus is reserved for dark or strong-fill contexts. On standard surfaces it introduces unnecessary emphasis and breaks focus consistency"],
+          ["color.focus.negative", "Non-destructive interaction contexts, such as primary actions, neutral controls, or standard navigation", "Negative focus is reserved for destructive interactive contexts. Using it elsewhere introduces false severity and breaks semantic trust"]
+        ]
+      }
+    ]
+  },
+  "typography": {
+    "overview": [
+      {
+        "title": "Typography Principles",
+        "subtitle": "These principles define how typography works, what each principle controls, and how to apply it.",
+        "columns": ["Principle", "Definition", "What it controls", "Reading impact", "Use rule", "Avoid", "Why"],
+        "rows": [
+          ["Hierarchy", "Role, size, and weight signal content priority.", "Role assignment, size selection, weight variant", "Users see the most important content first.", "Assign roles by importance, not by how they look.", "Using size alone without a role.", "Without hierarchy, scanning becomes harder."],
+          ["Legibility", "Characters must be readable at their intended size.", "Font family choice, minimum size, letter-spacing", "Users read characters without extra effort.", "Choose clear typefaces and enforce a minimum readable size for every role.", "Using decorative or condensed typefaces for UI text.", "Illegible type slows reading and forces decoding."],
+          ["Readability", "Text blocks should support comfortable reading across multiple lines.", "Line-height, line length, paragraph spacing, role-to-context match", "Users read paragraphs without fatigue.", "Use reading roles for long text and structural roles for short labels and headers.", "Using display or headline roles for paragraph text.", "Poor readability makes comprehension harder and users stop reading."],
+          ["Rhythm", "Consistent line-height and spacing create a predictable rhythm.", "Line-height relative to font size, vertical spacing between blocks", "Reading feels steady and uninterrupted.", "Pair each font size with a proportional line-height and keep vertical spacing consistent within the same role.", "Overriding line-height arbitrarily or collapsing spacing.", "Broken rhythm makes users lose orientation."],
+          ["Scale", "Type sizes follow a systematic, proportional progression.", "The range and ratio of available sizes, step difference between roles", "Size differences between roles feel intentional.", "Derive sizes from a consistent ratio and make each role noticeably different from adjacent roles.", "Picking sizes by feel or adding one-off values.", "Arbitrary sizes break proportion and make the system hard to maintain."],
+          ["Role", "Each text element has a defined semantic purpose that determines its styling.", "The mapping between content function and typographic treatment", "Text communicates its own function and users understand structure quickly.", "Choose roles by what the content does, not by how it looks.", "Choosing a role by appearance instead of meaning.", "Semantic roles separate appearance from intent and keep decisions consistent."],
+          ["Weight", "Font weight signals emphasis within a role, not between roles.", "Base and emphasized variants at the same role level", "Emphasis reads as a natural accent and draws attention without disrupting flow.", "Use weight for emphasis within a role and keep base weight as the default.", "Combining a role upgrade and a weight increase.", "Stacked signals create visual noise; one dimension of emphasis is enough."],
+          ["Family", "Each font family carries a distinct semantic identity; structure, content, and technical data require different voices.", "The assignment of typefaces to role categories", "Type feels purposeful and a family shift signals a content type change.", "Assign families by content category: one for structure, one for reading, and one for technical content.", "Mixing families within the same role or using a technical typeface for general reading.", "Family discipline preserves the semantic layer; arbitrary mixing collapses the distinction between structure, content, and code."],
+          ["Contrast", "Text must remain perceptible against its background in all reading conditions.", "Text-to-background relationships, opacity levels, minimum contrast ratios", "Text is effortlessly visible regardless of lighting or screen brightness.", "Treat contrast as a hard constraint and verify every role at its intended size.", "Reducing text opacity on colored backgrounds without verifying contrast.", "Failed contrast blocks access for low-vision users and degrades reading in non-ideal conditions."],
+          ["Adaptation", "Typography adjusts predictably across contexts and screen sizes without losing hierarchy or intent.", "How roles and sizes shift across breakpoints or density modes", "Type feels right-sized at every context, neither overwhelming on small screens nor too small on large screens.", "Treat adaptation as a system rule and define how each role responds to context before applying it to layouts.", "Manually adjusting type sizes per screen or component without a governing rule.", "Without adaptation rules, responsive behavior becomes inconsistent and unmaintainable."]
+        ]
+      },
+      {
+        "title": "Text Roles",
+        "subtitle": "Choose a role, size level, and semantic style. Avoid manual overrides.",
+        "columns": ["Role", "Purpose", "Use for", "Rules"],
+        "rows": [
+          ["Display", "Add strong emphasis and set the screen tone.", "Use for hero messages and key statements.", "Use only once per screen for the most important message."],
+          ["Headline", "Define the main content hierarchy.", "Use for page titles, main section headers, and group titles.", "Describe the content below and support navigation."],
+          ["Title", "Support secondary hierarchy and organize content blocks.", "Use for card titles, subsections, and component headers.", "Keep titles concise and directly related to the content below."],
+          ["Body", "Deliver information clearly and comfortably.", "Use for paragraphs, descriptions, and continuous text.", "Keep body text neutral, readable, and free of emphasis."],
+          ["Label", "Guide interaction and clarify interface elements.", "Use for form labels, buttons, controls, and UI metadata.", "Keep labels clear, functional, and easy to scan."],
+          ["Caption", "Add supporting context or information.", "Use for helper text, metadata, and explanatory notes.", "Keep captions secondary and avoid competing with primary content."],
+          ["Riyal", "Present the Riyal currency symbol at approved sizes.", "Use only for Saudi Riyal currency symbols.", "Do not use for prose, code, or general reading text."]
+        ]
+      },
+      {
+        "title": "Type Token Layers",
+        "subtitle": "Each layer defines what it includes, excludes, and answers.",
+        "columns": ["Layer", "Definition", "Purpose", "Contains", "Does not contain", "Core question", "Example"],
+        "rows": [
+          ["Scales", "Raw size values with responsive steps.", "Defines the base size scale.", "Size steps 50–1600 across XL, LG, MD, and SM.", "Families, weights, line-heights, roles.", "What size is this step?", "typography/400 typography/700"],
+          ["Primitives", "Named properties built from scales.", "Turns raw values into reusable names.", "Family, weight, size, line-height, and letter-spacing aliases.", "Roles, intent, and composite styles.", "What property name should this use?", "typography/family/english typography/size/400"],
+          ["Semantic", "Role tokens built from primitives.", "Assigns primitives to roles and variants.", "Family, weight, size, line-height, and letter-spacing by role.", "Raw values, composite styles, and overrides.", "What value does this role need?", "typography/headline/lg/base/size typography/label/md/base/weight"],
+          ["Text Styles", "Bundles semantic tokens for one role/size/variant.", "Provides one complete style per role/size/variant.", "Complete styles for every role/size/variant.", "Overrides, raw values, and layout.", "Which text style applies?", "typography/display/lg/base typography/body/md/strong"]
+        ]
+      },
+      {
+        "title": "Typography Breakpoints",
+        "subtitle": "Shows how type scales, roles change, and reading behavior adapts across each breakpoint.",
+        "columns": ["Breakpoint", "Width range", "Type intent", "Scale behavior", "Structural roles", "Functional roles", "Reading behavior", "Adaptive rules", "Notes"],
+        "rows": [
+          ["SM", "320–599px", "Keep core readability at the smallest viable sizes.", "Steps 400–1400 reduce; steps 100–300 stay the same.", "Display, Headline, and Title reduce; largest drops are at the top of the scale.", "Body/sm and Body/md stay the same; Body/lg drops one step; Label and Caption stay the same.", "Viewport constrains line length; use single-column vertical flow.", "Compress → Stabilize → Flow", "Functional roles stay the same to keep UI legible on small screens."],
+          ["MD", "600–1023px", "Structural roles compress; functional roles reach working size.", "Steps 600–1400 reduce; steps 100–500 match LG.", "Display, Headline, and Title/md+ reduce; Title/sm stays the same.", "Body, Label, and Caption stay the same as LG.", "Moderate reading widths are available; use single or multi-column layouts.", "Compress → Align → Stabilize", "Body and Label reach their stable working state at this breakpoint."],
+          ["LG", "1024–1439px", "Primary working state with full scale and complete hierarchy.", "All steps use baseline values; reference point for all other modes.", "Display, Headline, and Title are at full size; full visual hierarchy is available.", "Body, Label, and Caption are at full working sizes; optimal reading comfort.", "Full reading widths apply; supports both single and multi-column layouts.", "Expand → Align → Distribute", "Default system state; all design decisions reference LG."],
+          ["XL", "1440px+", "Layout expands; type stays the same.", "No changes from LG; all steps match LG.", "All roles keep LG values; no type adaptation occurs.", "All roles keep LG values; fully stable.", "Line length constraints become critical as layout expands; enforce reading widths explicitly.", "Maintain → Anchor → Constrain", "Type system is stable at XL; layout manages width expansion, not type."]
+        ]
+      }
+    ],
+    "usage": [
+      {
+        "title": "Text Styles",
+        "subtitle": "Styles combine semantic tokens into final, reusable text definitions used consistently across the interface.",
+        "columns": ["Name", "Strong variant", "Usage"],
+        "rows": [
+          ["Display Large", "Yes", "Hero and maximum-impact brand statements."],
+          ["Display Medium", "Yes", "Prominent entry points and key messages."],
+          ["Display Small", "Yes", "Compact display emphasis."],
+          ["Headline Large", "Yes", "Primary page titles."],
+          ["Headline Medium", "Yes", "Section headers for major content areas."],
+          ["Headline Small", "Yes", "Compact section headers."],
+          ["Headline Small Light", "—", "Legacy-compatible light headline."],
+          ["Title Large", "Yes", "Prominent card titles and subsections."],
+          ["Title Medium", "Yes", "Standard card titles and component headers."],
+          ["Title Small", "Yes", "Compact titles in dense layouts."],
+          ["Body XL", "Yes", "Large body and introductory reading text."],
+          ["Body Large", "Yes", "Emphasized body and highlighted content."],
+          ["Body Medium", "Yes", "Default paragraphs and primary reading content."],
+          ["Body Small", "Yes", "Secondary body and dense reading."],
+          ["Body XS", "Yes", "Compact body and supporting reading text."],
+          ["Label Large", "Yes", "Prominent controls and labels."],
+          ["Label Medium", "Yes", "Default controls and labels."],
+          ["Label Small", "Yes", "Compact controls and labels."],
+          ["Caption Large", "Yes", "Upper captions and supporting information."],
+          ["Caption Medium", "Yes", "Helper text and metadata."],
+          ["Caption Small", "Yes", "Secondary and auxiliary information."],
+          ["Caption XS", "Yes", "Smallest caption and navigation metadata."],
+          ["Riyal Large", "—", "Large Riyal currency symbol."],
+          ["Riyal Medium", "—", "Medium Riyal currency symbol."],
+          ["Riyal Small", "—", "Small Riyal currency symbol."]
+        ]
+      },
+      {
+        "title": "Usage Rules",
+        "subtitle": "Defines each type role's intended use, primary purpose, and structural rules, including when to use an alternative.",
+        "columns": ["Role", "Definition", "Do", "Avoid", "Why"],
+        "rows": [
+          ["Display", "Creates strong visual emphasis and defines the emotional register of a screen", "Use once per view and give it space to stand alone as the dominant anchor", "Use Display for page titles, section headers, or multiple times on the same screen", "Display claims maximum attention. Using it multiple times or for structural titles weakens its impact and flattens hierarchy"],
+          ["Headline", "Defines content hierarchy and signals the opening of a major area", "Use as the highest-level title for page content and keep it short and descriptive", "Use Headline inside cards, dialogs, or component-level areas", "Headline anchors page-level structure. Using it inside components confuses the hierarchy level it occupies"],
+          ["Title", "Supports secondary hierarchy and labels component-level content", "Use as the default heading for cards, forms, panels, and dialogs and keep it concise", "Use Title for full-page headers or stack multiple Title levels without a visible hierarchy difference", "Title operates at component scale. Applying it at page level removes the distinction between page and component hierarchy"],
+          ["Body", "Delivers readable, comfortable information for sustained comprehension", "Use for paragraphs, descriptions, and any text requiring reading. Respect line-height and line length", "Override line-height or use Body for single-line UI controls or functional labels", "Body is optimized for reading flow. Using it for UI labels or overriding its spacing degrades readability and interface clarity"],
+          ["Label", "Guides user interaction and clarifies interface elements", "Use for buttons, form labels, navigation items, and tabs. Keep size consistent across similar controls", "Use Label for multi-line or descriptive content that requires reading comprehension", "Label signals actionability and identity. Using it for descriptive content blurs the boundary between functional and editorial text"],
+          ["Caption", "Provides supplementary annotation without competing with primary content", "Use for timestamps, helper text, form hints, and secondary labels. Keep it visually subordinate", "Use Caption where Body is needed for comprehension or make Caption the primary readable content", "Caption is optimized for support, not primary reading. Elevating it to main content breaks contrast and reduces legibility"],
+          ["Riyal", "Represents the Saudi Riyal currency symbol with approved optical sizing.", "Use only for Riyal currency symbols in prices and financial values.", "Use Riyal for prose, titles, code, or general reading content", "Riyal-Font is reserved for the Saudi Riyal symbol and should not carry general text."]
+        ]
+      }
+    ]
+  },
+  "spacing": {
+    "overview": [
+      {
+        "title": "Token Structure",
+        "subtitle": "The system has two layers: primitives (raw values) and semantic tokens (meaningful spacing roles).",
+        "columns": ["Layer", "Definition", "Purpose", "Contains", "Does not contain", "Core question", "Example"],
+        "rows": [
+          ["Primitives", "Named values mapped directly from raw pixel numbers.", "Provide a stable source layer for semantic spacing decisions.", "14 tokens covering 0–128px in a non-linear step progression.", "Meaning, direction, density, or usage context.", "What spacing value exists in the system?", "spacing.space.200 spacing.space.900"],
+          ["Semantic", "Role-based tokens organized by spatial relationship family, resolved across three density modes.", "Assign the correct spacing value to each relationship type and adapt it to the active density context.", "31 tokens across 6 families; five families use xs–xl, while Inset extends to 2xl. Each mode aliases spacing primitives.", "Raw px values, generic size references, component-specific overrides, layout or grid decisions.", "What spacing governs this relationship, and at what density?", "spacing.stack.md spacing.inset.xl"]
+        ]
+      },
+      {
+        "title": "Density Model",
+        "subtitle": "Three density modes adjust semantic spacing tokens to change information density and breathing room across different product contexts.",
+        "columns": ["Density mode", "Intent", "Spacing behavior", "Token remapping rule", "Typical context"],
+        "rows": [
+          ["Compact", "Maximize information density and reduce scanning distance", "Use smaller semantic steps for local and repeated spacing", "Map each semantic token to its smaller primitive. Keep interactive gaps at least 8px.", "Data tables, dashboards, dense admin tools, and enterprise workflows"],
+          ["Default", "Balance readability, grouping, and space use", "Use semantic tokens at their baseline values", "No remapping. Use the default semantic token values from the foundation.", "General product UI, standard workflows, and balanced content screens"],
+          ["Comfortable", "Increase breathing room, separation, and scanning comfort", "Use larger semantic steps for layout, grouping, and section rhythm", "Map each semantic token to its larger primitive when more breathing room is needed.", "Content-first products, onboarding, touch-first layouts, and marketing flows"]
+        ]
+      }
+    ],
+    "usage": [
+      {
+        "title": "Usage Rules",
+        "subtitle": "How to choose the right spacing family based on how content is grouped, how deep it is in the hierarchy, and how the layout is structured.",
+        "columns": ["Family", "Values", "Meaning", "Use for", "Avoid", "Why"],
+        "rows": [
+          ["Stack", "spacing.stack.xs spacing.stack.sm spacing.stack.md spacing.stack.lg spacing.stack.xl", "Vertical spacing between items stacked in a reading or grouping flow.", "Use between stacked items in a reading or content flow.", "Do not use for horizontal rows, grids, container padding, page sections, or macro zones.", "Stack values change differently than other spacing families. Using them outside vertical flow breaks density scaling."],
+          ["Inline", "spacing.inline.xs spacing.inline.sm spacing.inline.md spacing.inline.lg spacing.inline.xl", "Horizontal spacing between items placed side by side in one row.", "Use between items in a single row or inline group.", "Do not use for padding, vertical groups, multi-row layouts, grid gaps, or list spacing.", "Using Inline for vertical or grid layouts breaks the intended direction and produces inconsistent density."],
+          ["Inset", "spacing.inset.xs spacing.inset.sm spacing.inset.md spacing.inset.lg spacing.inset.xl spacing.inset.2xl", "Internal padding between content and the edge of its container.", "Use for internal spacing between content and the edge of its container.", "Do not use between sibling items, repeated elements, or instead of Gap or Stack.", "If container padding shares tokens with item spacing, density changes will break the layout structure."],
+          ["Gap", "spacing.gap.xs spacing.gap.sm spacing.gap.md spacing.gap.lg spacing.gap.xl", "Equal spacing between repeated items in grids, lists, and modules.", "Use for evenly repeated items in grids, lists, galleries, and repeated structures.", "Do not use for unique hierarchies, section rhythm, or asymmetric groups.", "Gap forces equal spacing on elements that should have different visual importance."],
+          ["Section", "spacing.section.xs spacing.section.sm spacing.section.md spacing.section.lg spacing.section.xl", "Separation between major vertical page zones and top-level content regions.", "Use between major vertical page zones and top-level content regions.", "Do not use inside local groups, containers, cards, or component-level structures.", "If macro zones use component-level spacing, system changes will affect local spacing."],
+          ["Container", "spacing.container.xs spacing.container.sm spacing.container.md spacing.container.lg spacing.container.xl", "Padding inside layout shells, page wrappers, and bounded structures.", "Use for padding in layout shells, wrappers, and bounded page structures.", "Do not use between sibling content blocks or for local item spacing.", "If shell padding shares tokens with content spacing, it blurs the difference between layout boundaries and content relationships."]
+        ]
+      }
+    ]
+  },
+  "radius": {
+    "overview": [
+      {
+        "title": "Token Structure",
+        "subtitle": "Radius tokens are built in three simple layers: numeric values, friendly names, and semantic keys that help you choose the right corner shape for each UI part.",
+        "columns": ["Part", "What it is", "Why use it", "Holds", "Leaves out", "Ask yourself", "Sample token"],
+        "rows": [
+          ["Scale", "The numeric values used for radius", "Keeps corner sizes consistent", "Named steps like scale.200 and scale.700", "Meaning, shape type, or usage rules", "What size should this corner be?", "scale.200 scale.700"],
+          ["Primitive", "Friendly names for scale values", "Makes scale values easier to read and use", "Names like radius.xs and radius.2xl", "Shape type, component context, or usage rules", "Is this corner small, medium, or large?", "radius.xs radius.2xl"],
+          ["Semantic", "Tokens grouped by what the UI part looks like", "Choose the right corner shape for the UI part", "Tokens like shape.edge.hard and shape.surface.expressive", "Raw px values, primitive names, or layout rules", "What kind of shape should this UI part feel like?", "shape.edge.hard shape.surface.expressive"]
+        ]
+      },
+      {
+        "title": "Shape Categories",
+        "subtitle": "Use these shape families for clear, consistent UI: edges for layout, controls for actions, surfaces for grouping, overlays for floating layers, and cornerless shapes for compact objects.",
+        "columns": ["Shape", "Look", "Use for", "Semantic token", "When to use"],
+        "rows": [
+          ["Edge", "Sharp edges with minimal rounding", "Use for layout edges, dividers, and crisp seams", "edge", "Use when you need a clear seam or divider"],
+          ["Control", "Rounded corners for interactive parts", "Use for buttons, inputs, and interactive controls", "control", "Use for most buttons and interactive elements"],
+          ["Surface", "Rounded containment on the main page", "Use for cards, panels, and grouped content", "surface", "Use for grouped content on the main page"],
+          ["Overlay", "Rounded layers that sit above the page", "Use for modals, toasts, and floating layers", "overlay", "Use when the layer needs to feel separate"],
+          ["Cornerless", "No visible corners", "Use for tags, avatars, and compact objects", "rounded", "Use when the shape should feel compact"]
+        ]
+      }
+    ],
+    "usage": [
+      {
+        "title": "Usage Rules",
+        "subtitle": "Use the right corner radius for the job. It makes the interface feel consistent and easy to scan.",
+        "columns": ["Role", "Tokens", "Definition", "Do", "Avoid", "Why"],
+        "rows": [
+          ["Edge", "shape.edge.hard shape.edge.soft", "Use for sharp structural edges where corners should feel crisp.", "Use for dividers, grid edges, and dense layouts.", "Avoid for buttons, cards, and floating layers.", "Sharp corners work best when the interface needs to feel dense."],
+          ["Control", "shape.control.compact shape.control.base shape.control.soft", "Use for buttons, inputs, tags, and other repeated interactive elements.", "Use for repeated controls like buttons, inputs, and chips.", "Avoid for dividers, cards, and floating layers.", "Consistent control corners make the interface easier to scan."],
+          ["Surface", "shape.surface.subtle shape.surface.base shape.surface.raised shape.surface.soft shape.surface.expressive", "Use for cards, panels, and grouped content.", "Use for cards, panels, and grouped regions.", "Avoid for buttons, dividers, and floating layers.", "Consistent surface corners help related content feel grouped."],
+          ["Overlay", "shape.overlay.base shape.overlay.soft", "Use for floating layers that need to feel separate.", "Use for modals, popovers, and dropdowns.", "Avoid for cards and base-layout content.", "Softer corners make floating layers feel detached."],
+          ["Rounded", "shape.rounded", "Use for pill shapes, avatars, and badges.", "Use for pills, avatars, and badges.", "Avoid when partial rounding is enough or the shape needs to feel structural.", "Partial rounding on pill shapes creates visual noise."]
+        ]
+      },
+      {
+        "title": "Connected Corners",
+        "subtitle": "Keep outside corners rounded and shared seams square so connected parts feel like one shape.",
+        "columns": ["Pattern", "Outer corners", "Inner corners", "Use when", "Rule"],
+        "rows": [
+          ["Unified group", "Outside corners stay rounded.", "Shared seams become square.", "Use when parts sit side by side.", "Outside corners stay rounded; shared seams stay square."],
+          ["Attached edge", "Outside corners stay rounded.", "Shared seams become square.", "Use when one part attaches to another.", "Outside corners stay rounded; shared seams stay square."],
+          ["Stacked boundary", "Outside corners stay rounded.", "Shared seams become square.", "Use when parts stack on top of each other.", "Outside corners stay rounded; shared seams stay square."]
+        ]
+      },
+      {
+        "title": "Nested Corners",
+        "subtitle": "Nested shapes use softer inner corners to keep hierarchy clear and corners aligned.",
+        "columns": ["Nesting", "Parent behavior", "Child behavior", "Use when", "Rule"],
+        "rows": [
+          ["Standard nested surface", "Keep the outer shape's assigned radius.", "Make the inner shape a little softer.", "Use when one shape sits inside another.", "Reduce by one radius level."],
+          ["Inset-following surface", "The outer shape sets the silhouette.", "The inner shape follows that silhouette.", "Use when the inner shape is inset.", "Inner radius = parent radius − inset."],
+          ["Deep nested structure", "Each outer shape keeps its radius.", "Each inner shape gets softer.", "Use when there are many nested layers.", "Reduce radius with each level."]
+        ]
+      }
+    ]
+  },
+  "elevation": {
+    "overview": [
+      {
+        "title": "Elevation Surface Model",
+        "subtitle": "Shows how each surface sits in the stack, what it looks like, and when to use it.",
+        "columns": ["Surface", "Purpose", "Depth", "Use for", "Look", "Shadow", "Rule"],
+        "rows": [
+          ["Canvas", "The base app surface.", "0", "App shell and page background.", "Flat background.", "None.", "Use as the default background."],
+          ["Section", "Groups content inside the canvas.", "0", "Content zones and section backgrounds.", "Flat with no lift.", "None.", "Use for grouped content."],
+          ["Surface", "The default contained surface.", "1", "Cards, panels, and modules.", "Subtle separation.", "elevation/surface", "Use for default contained surfaces."],
+          ["Raised", "Adds more prominence than Surface.", "2", "Emphasized panels and stronger containers.", "Clearer lift.", "elevation/raised", "Use when a surface needs more emphasis."],
+          ["Overlay", "Blocks the background behind active surfaces.", "3", "Modal backdrop and drawer scrim.", "Darkens the background.", "Scrim only.", "Use behind active surfaces only."],
+          ["Elevated", "The top-priority floating surface.", "4", "Modals and dialogs.", "Detached and in front of everything.", "elevation/elevated", "Use for the top active surface."]
+        ]
+      },
+      {
+        "title": "Elevation Levels",
+        "subtitle": "These levels describe how layers stack in documentation and development. They are not Figma variables for designers to apply.",
+        "columns": ["Level", "Meaning", "Role", "Use case", "Type", "Rule"],
+        "rows": [
+          ["Level 0", "Base background", "Canvas / Section", "App background, grouped content", "Resting", "Use for the base plane. Canvas and Section sit at the same level."],
+          ["Level 1", "Standard surface", "Surface", "Cards, panels, modules", "Resting", "Use for standard contained UI above Level 0."],
+          ["Level 2", "More emphasis", "Raised", "Stronger panels, secondary sheets", "Resting", "Use when a surface needs more emphasis than Level 1."],
+          ["Level 3", "Backdrop", "Overlay", "Modal scrim, drawer scrim", "Support layer", "Use behind Level 4. It is not a content surface."],
+          ["Level 4", "Top priority", "Elevated", "Modals, dialogs", "Foreground", "Use for the highest-priority floating surface."]
+        ]
+      },
+      {
+        "title": "Token Structure",
+        "subtitle": "Shadow geometry primitives and opacity tokens power the semantic elevation styles: Surface, Raised, and Elevated.",
+        "columns": ["Layer", "Definition", "Purpose", "Contains", "Does not contain", "Core question", "Example"],
+        "rows": [
+          ["Primitives", "Raw shadow geometry values used to build every elevation effect", "Provide the base measurements for vertical offset, blur, and spread", "Shadow geometry tokens for y-axis, blur, and spread", "Opacity, semantic roles, composed effects, usage guidance", "What geometry values make up the shadow?", "shadow.y-axis.1 shadow.spread.n2"],
+          ["Effect", "Shadow opacity tokens for Light and Dark modes", "Control how visible the shadow is in each theme", "Light and Dark opacity tokens for shadow contrast", "Geometry values, semantic roles, composed effects, usage guidance", "How visible should the shadow be?", "effect.shadow.opacity.light effect.shadow.opacity.dark"],
+          ["Semantic", "Prebuilt Effect Styles that combine geometry and opacity for common roles", "Give designers a simple way to apply elevation without building from scratch", "3 Effect Styles: Surface, Raised, Elevated", "Raw geometry values, opacity tokens, layout context, conceptual depth levels", "Which elevation role should this surface use?", "elevation/surface elevation/raised elevation/elevated"]
+        ]
+      },
+      {
+        "title": "Semantic Roles",
+        "subtitle": "Use semantic roles to describe what an element does. Then apply the matching Effect Style: Surface, Raised, or Elevated.",
+        "columns": ["Role", "Effect style", "Shadow", "Scrim", "Use for", "Description"],
+        "rows": [
+          ["Canvas", "None", "none", "none", "Page background", "The base layer of the interface. It sits behind everything else."],
+          ["Section", "None", "none", "none", "Content groups", "Groups related content without lifting it off the page."],
+          ["Surface", "Surface", "elevation/surface", "none", "Cards, panels, and sheets", "Adds a soft lift for contained content without strong emphasis."],
+          ["Raised", "Raised", "elevation/raised", "none", "Prominent cards and drawers", "Adds stronger separation and emphasis while staying stable."],
+          ["Overlay", "Overlay", "none", "scrim", "Modals and full-screen covers", "Suppresses the page with a scrim, but does not add a shadow."],
+          ["Elevated", "Elevated", "elevation/elevated", "none", "Floating actions and alerts", "Creates the highest stable foreground layer in the interface."]
+        ]
+      }
+    ],
+    "usage": [
+      {
+        "title": "Usage Rules",
+        "subtitle": "Use each surface role for its intended job. Keep the hierarchy simple and predictable.",
+        "columns": ["Surface", "Elevation", "Use for", "Do", "Avoid", "Why"],
+        "rows": [
+          ["Canvas", "No shadow", "The root background behind all content", "Use as the default page background", "Do not add shadow", "Keep the base plane flat"],
+          ["Section", "No shadow", "A base grouping plane with no shadow", "Group related content without lifting it", "Do not add shadow", "Keep base groupings flat"],
+          ["Surface", "elevation/surface", "A contained surface with subtle separation", "Use for stable working areas", "Do not use for interruptions", "Keep containment simple"],
+          ["Raised", "elevation/raised", "A stronger contained surface", "Use for stronger separation", "Do not overuse on one screen", "Prominence loses meaning when repeated"],
+          ["Overlay", "Scrim", "A scrim with no shadow", "Use behind elevated content", "Do not use as content background", "Keep overlays for suppression only"],
+          ["Elevated", "elevation/elevated", "The highest foreground plane", "Use for high-priority foreground content", "Do not use for routine layout", "Save it for the highest emphasis"]
+        ]
+      },
+      {
+        "title": "Interaction Rules",
+        "subtitle": "Maps each interaction state to its elevation behavior, semantic role change, and usage rules.",
+        "columns": ["Interaction state", "Default behavior", "Elevation change", "Typical semantic roles", "Purpose", "Rules"],
+        "rows": [
+          ["Resting", "Keep assigned role", "None", "Surface, Raised, Elevated", "Keep hierarchy stable", "Keep assigned role"],
+          ["Hover", "Small visual lift", "Small shadow increase", "Surface, Raised, Elevated", "Show affordance", "Same role"],
+          ["Press", "Reduce lift", "Shadow reduction", "Surface, Raised, Elevated", "Confirm input", "Reduce lift"],
+          ["Focus", "Use a focus indicator", "None", "Surface, Raised, Elevated", "Support accessibility", "Same role"],
+          ["Open, non-blocking", "Use Elevated only when floating above context", "Use Elevated if needed", "Surface, Raised → Elevated", "Floating access above context", "Use Elevated only when floating"],
+          ["Open, blocking", "Overlay behind Elevated", "Overlay behind Elevated", "Overlay + Elevated", "Block background interaction", "Overlay behind Elevated"],
+          ["Drag start", "Temporary lift", "Temporary lift", "Surface, Raised, Elevated", "Signal pickup", "Temporary lift"],
+          ["Dragging", "Keep temporary lift", "Temporary top priority", "Transient above Elevated", "Keep visible while moving", "Temporary lift"],
+          ["Dismiss / Release", "Return to resting role", "Back to resting role", "All", "Restore hierarchy", "Return to resting role"]
+        ]
+      },
+      {
+        "title": "Pairing Rules",
+        "subtitle": "Use the lowest valid elevation. Keep Overlay behind Elevated. Temporary lift returns to rest.",
+        "columns": ["Pairing", "Relationship", "Use", "Rule", "Avoid"],
+        "rows": [
+          ["Canvas → Section", "Base to grouped base variation", "Structural grouping on the base plane", "Use when related content needs quiet separation without lift.", "Do not use this pairing to create emphasis or foreground priority."],
+          ["Canvas → Surface", "Base to contained plane", "Standard contained separation", "Use as the default step from structural plane to working surface.", "Do not skip to stronger roles when standard containment is enough."],
+          ["Surface → Raised", "Contained to stronger contained", "Local contained emphasis", "Use as the primary step for increasing prominence without entering full foreground behavior.", "Do not stack multiple raised layers without a clear hierarchy difference."],
+          ["Surface → Elevated", "Contained to detached foreground", "Transition from stable content to strong foreground priority", "Use when the plane must clearly detach from surrounding workflow.", "Do not use when stronger contained emphasis is enough."],
+          ["Raised → Elevated", "Strong contained to top foreground", "Escalation to highest stable foreground role", "Use when a previously emphasized plane must become the active foreground plane.", "Do not keep both roles competing in the same local area without a clear active state."],
+          ["Overlay → Elevated", "Backdrop to active foreground", "Blocking interruption pair", "Always use these together for controlled interruption.", "Do not use Overlay without a foreground plane above it."]
+        ]
+      },
+      {
+        "title": "Decision Matrix",
+        "subtitle": "Ask the design question, choose the right surface role, and use the short reason to explain why.",
+        "columns": ["Design question", "Recommended role", "Why", "Avoid", "Escalate when"],
+        "rows": [
+          ["What is the base page plane?", "Canvas", "Sets the base environment.", "Section, Raised, Elevated", "Needs a grouped area inside."],
+          ["How do I group content quietly?", "Section", "Groups without lift.", "Raised, Elevated", "Needs stronger separation."],
+          ["What plane should most content sit on?", "Surface", "Default contained plane.", "Raised, Elevated", "Needs stronger emphasis."],
+          ["How do I add emphasis without foreground?", "Raised", "Adds prominence, stays stable.", "Elevated", "Needs stronger separation."],
+          ["How do I suppress the background?", "Overlay", "Blocks the background.", "Surface, Raised, Elevated", "Needs a foreground plane."],
+          ["What is the strongest foreground plane?", "Elevated", "Highest stable foreground.", "Raised", "Needs stronger active emphasis."],
+          ["What is the lift for active interaction?", "Temporary lift", "Lifts only while active.", "Elevated", "Interaction ends."],
+          ["What if grouping feels weak?", "No elevation change", "Fix with layout first.", "Raised, Elevated", "Layout fixes fail."],
+          ["How do I interrupt the workflow?", "Overlay + Elevated", "Blocks and detaches.", "Raised, Overlay alone", "Interruption ends."],
+          ["What if sibling planes feel equal?", "Reduce one role first", "Contrast improves hierarchy.", "Raise all siblings.", "One plane becomes active."],
+          ["How do I make the interface feel lighter?", "Use the lowest valid role", "Reduces visual noise.", "Default to Raised, Elevated", "Lower roles fail."]
+        ]
+      }
+    ]
+  },
+  "layout": {
+    "overview": [
+      {
+        "title": "Layout Principles",
+        "subtitle": "",
+        "columns": ["Principle", "Meaning", "Use", "Avoid", "Why"],
+        "rows": [
+          ["Structure", "Clear screen regions.", "Build the shell first.", "Starting with components.", "Makes layouts predictable."],
+          ["Hierarchy", "The main task owns the most space.", "Prioritize core work.", "Equal weight for every region.", "Shows what matters first."],
+          ["Flow", "A clear task order.", "Arrange by user sequence.", "Jumping between regions.", "Reduces effort."],
+          ["Readability", "Comfortable content width.", "Constrain reading content.", "Unlimited text width.", "Improves comprehension."],
+          ["Scanability", "Repeated alignment and grouping.", "Reuse anchors and patterns.", "Irregular placement.", "Helps users find content."],
+          ["Stability", "Works across widths and content states.", "Test empty, long, and narrow states.", "One ideal viewport only.", "Scales safely."],
+          ["Alignment", "Shared grid lines and edges.", "Align repeated content.", "Mixing unrelated axes.", "Creates visual order."],
+          ["Constraint", "Intentional width limits.", "Cap width when clarity drops.", "Filling all available space.", "Prevents layout drift."],
+          ["Adaptation", "Defined responsive changes.", "Use breakpoint rules.", "Redesigning every viewport.", "Keeps behavior consistent."],
+          ["Consistency", "Same rule for the same screen type.", "Reuse layout patterns.", "Per-screen exceptions.", "Makes the system maintainable."]
+        ]
+      },
+      {
+        "title": "Layout Regions",
+        "subtitle": "",
+        "columns": ["Region", "Purpose", "Position", "Width", "Small view", "Note"],
+        "rows": [
+          ["Top", "Global context and entry.", "Top edge", "Full or constrained", "Stays visible", "Keep height stable."],
+          ["Navigation", "Move between main sections.", "Top or side", "Fixed or flexible", "Drawer or overlay", "Core navigation stays reachable."],
+          ["Side", "Filters and secondary tools.", "Left or right", "Fixed or constrained", "Collapses early", "Move to overlay when needed."],
+          ["Main", "Core tasks and content.", "Center", "Flexible", "Full-width priority", "Never collapse main content."],
+          ["Supporting", "Extra context and metadata.", "Side or below", "Flexible or constrained", "Moves below or hides", "Do not disrupt main flow."],
+          ["Overlay", "Temporary focused tasks.", "Above page", "Independent", "Primary fallback", "Does not change base layout."]
+        ]
+      },
+      {
+        "title": "Breakpoint Model",
+        "subtitle": "Three ranges cover every viewport width. Use the available width, not the device name, to select the layout.",
+        "columns": ["Category", "Navigation", "Content"],
+        "rows": [
+          ["Mobile", "Full-screen overlay", "Single-column flow"],
+          ["Tablet", "Collapsible drawer", "Two-column capable"],
+          ["Desktop", "Persistent navigation", "Multi-column + full tables"]
+        ]
+      },
+      {
+        "title": "Grid Rules",
+        "subtitle": "",
+        "columns": ["Element", "Meaning", "Use", "Avoid", "Note"],
+        "rows": [
+          ["Columns", "Vertical page divisions.", "Align regions and spans.", "Mimicking component widths.", "Use 4, 8, or 12 by category."],
+          ["Gutter", "Space between columns.", "Separate grid spans.", "Using as card padding.", "12px Mobile, 16px Tablet, 24px Desktop."],
+          ["Margin", "Space at viewport edges.", "Protect page content.", "Removing on small screens.", "16px, 24px, 32px."],
+          ["Span", "Columns occupied by content.", "Use repeated span patterns.", "Arbitrary fixed widths.", "Re-map spans before stacking."],
+          ["Container", "The active grid area.", "Choose fluid or max-width.", "Undefined growth.", "Desktop max content is 1440px."],
+          ["Alignment", "Shared structural axis.", "Align similar screens alike.", "Mixed anchors.", "Use logical start/end for RTL."],
+          ["Full bleed", "Intentional edge-to-edge zone.", "Dashboards, media, maps.", "Standard reading content.", "Keep key content in a safe zone."],
+          ["Safe zone", "Area inside page margins.", "Keep actions and readable content.", "Placing essentials at edges.", "Backgrounds may extend beyond it."]
+        ]
+      },
+      {
+        "title": "Pane Model",
+        "subtitle": "",
+        "columns": ["Pane", "Width behavior", "Use", "Small view", "Priority"],
+        "rows": [
+          ["Fixed", "Stable until space is tight.", "Navigation and utility rails.", "Collapse or overlay.", "Protect only for core tasks."],
+          ["Flexible", "Uses remaining width.", "Main content and work areas.", "Full-width priority.", "Highest."],
+          ["Constrained", "Between minimum and maximum.", "Reading and supporting panels.", "Reduce, then stack.", "Below main content."],
+          ["Expanding", "Grows after core needs are met.", "Wide canvases.", "Not active.", "Optional growth."],
+          ["Collapsible", "Leaves inline layout under pressure.", "Filters and secondary tools.", "Overlay or below.", "Collapse early."],
+          ["Shared", "Balances width with a sibling.", "Split and comparison views.", "Stack.", "Based on task ownership."],
+          ["Independent", "Outside the inline layout.", "Drawers and temporary panels.", "Overlay.", "No inline priority."]
+        ]
+      },
+      {
+        "title": "Token Structure",
+        "subtitle": "",
+        "columns": ["Layer", "Meaning", "Contains", "Excludes", "Question", "Example"],
+        "rows": [
+          ["Scales", "Raw numeric values.", "Viewport thresholds, columns, widths.", "Layout roles.", "What value exists?", "layout-scales · viewport/768"],
+          ["Primitives", "Reusable aliases.", "Breakpoints, columns, gutters, margins, max width.", "Screen-specific intent.", "What reusable value exists?", "layout/grid/gutter/mobile"],
+          ["Semantic", "Mode-based page roles.", "Columns, gutter, margin, content behavior.", "Raw values.", "What controls the page?", "layout/page/gutter"],
+          ["Grid styles", "Applied page guides.", "Mobile, Tablet, Desktop grids.", "Component spacing.", "Which grid is applied?", "Layout/Grid/Desktop"]
+        ]
+      }
+    ],
+    "usage": [
+      {
+        "title": "Usage Rules",
+        "subtitle": "Use layout tokens for page structure. Keep component spacing and section spacing separate from the page grid.",
+        "columns": ["Role", "Use", "Avoid", "Why", "Applies to"],
+        "rows": [
+          ["Grid", "Align page regions to columns.", "Do not size components with the page grid.", "Keeps page structure consistent.", "All categories"],
+          ["Gutter", "Use only between grid columns.", "Do not use as card padding or section spacing.", "Prevents spacing roles from mixing.", "All categories"],
+          ["Margin", "Keep key content inside the outer margin.", "Do not remove margins on small screens.", "Protects content from viewport edges.", "All categories"]
+        ]
+      },
+      {
+        "title": "Responsive Behavior",
+        "subtitle": "",
+        "columns": ["Element", "Mobile", "Tablet", "Desktop", "Rule", "Note"],
+        "rows": [
+          ["Page grid", "4 columns", "8 columns", "12 columns", "Increase structure with width.", "Use the matching grid style."],
+          ["Navigation", "Full-screen overlay", "Collapsible drawer", "Persistent", "Inline only when it fits.", "Keep core navigation reachable."],
+          ["Main content", "Full-width priority", "Primary region", "Primary region", "Main content stays active.", "Never collapse the core task."],
+          ["Supporting content", "Below or hidden", "Below or constrained", "Inline when stable", "Move below before compressing main.", "Secondary priority."],
+          ["Forms", "One column", "Related fields may pair", "Multi-column when useful", "Stack before fields get narrow.", "Primary action remains clear."],
+          ["Tables", "Cards or table mode", "Prioritize + confined scroll", "Full table", "Every value stays reachable.", "No page-level horizontal scroll."],
+          ["Cards", "One column", "One or two columns", "Multi-column", "Use grid spans, not fixed width.", "Re-map spans before stacking."],
+          ["Modals", "Full-screen", "Adaptive", "Centered", "Transform when space is limited.", "Keep actions visible."],
+          ["Tabs", "Scroll or select", "Scrollable", "Visible", "Preserve access to every tab.", "Do not shrink labels too far."],
+          ["Breadcrumbs", "Back + current", "Truncated path", "Full path", "Simplify before wrapping.", "Current location stays clear."],
+          ["RTL", "Mirrored", "Mirrored", "Mirrored", "Use logical start and end.", "Test Arabic and English."]
+        ]
+      },
+      {
+        "title": "Content Width",
+        "subtitle": "",
+        "columns": ["Mode", "Use", "Mobile", "Tablet", "Desktop", "Note"],
+        "rows": [
+          ["Full", "Dashboards and wide work.", "Inside page grid", "Inside page grid", "Inside page grid", "Full does not mean edge-to-edge."],
+          ["Constrained", "Forms and focused tasks.", "Not defined", "Not defined", "Uses available cap", "Add a dedicated token after validation."],
+          ["Reading", "Articles and long text.", "Not defined", "Not defined", "Not defined", "Validate line length before tokenizing."],
+          ["Data", "Tables and analytics.", "Full-width priority", "Full-width priority", "Grid or full bleed", "Use explicit overflow behavior."],
+          ["Mixed", "Main + supporting regions.", "Per region", "Per region", "Per region", "Use only with clear hierarchy."]
+        ]
+      }
+    ]
+  }
+}

@@ -154,6 +154,20 @@ await manager.post("/team", { intent: "reactivate", id: contribId });
 r = await contributor.post("/sign-in", { email, password: "sample-password-2" });
 check("reactivated user signs in", r.status === 302);
 
+// Foundations: public read, team-only tracking
+const canvas = "color-semantic--colors.bg.base.canvas";
+check("visitor sees foundations", (await visitor.get("/foundations/colors?tab=semantic")).status === 200);
+check("visitor sees no tracking", !(await (await visitor.get("/foundations/colors?tab=semantic")).text()).includes('name="webStatus"'));
+check("visitor can't open updates", (await visitor.get("/foundations/updates")).status === 302);
+r = await visitor.post("/foundations/track", { tokenId: canvas, webStatus: "done" });
+check("visitor can't track", r.status === 302 || r.status === 403);
+r = await contributor.post("/foundations/track", { tokenId: canvas, webStatus: "in_review" });
+check("contributor tracks a token", r.status < 400);
+r = await contributor.post("/foundations/track", { tokenId: "primitives--nope", webStatus: "done" });
+check("unknown token rejected", r.status >= 400 || (await r.text()).includes("isn't"));
+check("change in updates log", (await (await manager.get("/foundations/updates")).text()).includes("colors.bg.base.canvas"));
+check("unknown section 404", (await visitor.get("/foundations/nope")).status === 404);
+
 // Sign out
 r = await contributor.post("/sign-out", {});
 check("sign out", r.status === 302 && (await contributor.get("/tasks")).status === 302);

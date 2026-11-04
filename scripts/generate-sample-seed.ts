@@ -14,9 +14,6 @@ type Kind = "foundation" | "component" | "icon";
 const q = (v: string | number | null) => (v === null ? "NULL" : typeof v === "number" ? String(v) : `'${v.replace(/'/g, "''")}'`);
 
 const groups: { kind: Kind; key: string; label: string; description: string }[] = [
-  { kind: "foundation", key: "colors", label: "Colors", description: "Sample group. Replace with your color foundations." },
-  { kind: "foundation", key: "spacing", label: "Spacing", description: "Sample group. Replace with your spacing scale." },
-  { kind: "foundation", key: "typography", label: "Typography", description: "Sample group. Replace with your type styles." },
   { kind: "component", key: "actions", label: "Actions", description: "Sample category." },
   { kind: "component", key: "forms", label: "Forms", description: "Sample category." },
   { kind: "component", key: "feedback", label: "Feedback", description: "Sample category." },
@@ -35,9 +32,7 @@ const items: Item[] = [];
 let n = 0;
 const add = (i: Omit<Item, "id"> & { id?: string }) => items.push({ id: i.id ?? `sample-${i.kind}-${String(++n).padStart(3, "0")}`, ...i });
 
-for (let i = 1; i <= 6; i++) add({ kind: "foundation", group: "colors", title: `Sample color ${String(i).padStart(2, "0")}`, value: `Sample value ${i}` });
-for (let i = 1; i <= 5; i++) add({ kind: "foundation", group: "spacing", title: `Sample space ${i}`, value: `${i * 4}px (sample)` });
-for (let i = 1; i <= 4; i++) add({ kind: "foundation", group: "typography", title: `Sample text style ${i}`, value: `Sample size ${i}` });
+// Foundations come from app/foundations/tokens.json, not from this seed.
 
 const components: [string, string, string, string][] = [
   ["Sample Button", "actions", "atom", "stable"],
@@ -92,9 +87,6 @@ const relations: [string, string, "uses" | "related"][] = [
   [id("Sample Data Table"), id("Sample Badge"), "uses"],
   [id("Sample Page Shell"), id("Sample Header"), "uses"],
   [id("Sample Page Shell"), id("Sample Card"), "uses"],
-  [id("Sample Button"), id("Sample color 01"), "uses"],
-  [id("Sample Button"), id("Sample space 2"), "uses"],
-  [id("Sample Input"), id("Sample text style 2"), "uses"],
 ];
 
 const lines: string[] = [
