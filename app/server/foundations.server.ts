@@ -3,6 +3,7 @@ import { alias } from "drizzle-orm/sqlite-core";
 import { z } from "zod";
 import { can, type Actor } from "~/domain/permissions";
 import { getToken } from "~/foundations/model";
+import { isComponentId } from "~/catalog/components";
 import { POLICY } from "~/config/hub";
 import type { Database } from "./db";
 import { schema } from "./db";
@@ -123,10 +124,18 @@ const FIELD_LABELS: Record<string, string> = {
   docsUrl: "docs link",
 };
 
-/** Saves tracking for one token and records each changed field in the activity log. */
+/** Tracking is shared by foundation tokens and catalog components; the id says which. */
+export function trackTargetType(id: string): "token" | "component" | null {
+  if (getToken(id)) return "token";
+  if (isComponentId(id)) return "component";
+  return null;
+}
+
+/** Saves tracking for one token or component and records each changed field in the activity log. */
 export async function updateTracking(db: Database, actor: Actor, tokenId: string, change: TrackingUpdate) {
-  if (!can(actor, "foundation.track")) throw new TrackingError(403, "You can't update token tracking.");
-  if (!getToken(tokenId)) throw new TrackingError(404, "This token doesn't exist in the current tokens file.");
+  if (!can(actor, "foundation.track")) throw new TrackingError(403, "You can't update tracking.");
+  const targetType = trackTargetType(tokenId);
+  if (!targetType) throw new TrackingError(404, "This item isn't in the current tokens file or component catalog.");
   if (change.assigneeId) {
     const member = await db.query.user.findFirst({ where: and(eq(user.id, change.assigneeId), eq(user.status, "active")) });
     if (!member) throw new TrackingError(400, "Choose an active team member.");
@@ -162,7 +171,7 @@ export async function updateTracking(db: Database, actor: Actor, tokenId: string
     db.insert(activityEvent).values(
       fields.map((f) => ({
         actorId: actor.id,
-        targetType: "token",
+        targetType,
         targetId: tokenId,
         action: "changed",
         field: FIELD_LABELS[f] ?? f,
@@ -185,10 +194,11 @@ function pickRow(row: Record<string, unknown>) {
 }
 
 /** The Updates log: every tracking change, newest first. */
-export async function listUpdates(db: Database, opts: { page: number; tokenId?: string }) {
+export async function listUpdates(db: Database, opts: { page: number; tokenId?: string; targetType?: "token" | "component" }) {
+  const type = opts.targetType ?? "token";
   const where = opts.tokenId
-    ? and(eq(activityEvent.targetType, "token"), eq(activityEvent.targetId, opts.tokenId))
-    : eq(activityEvent.targetType, "token");
+    ? and(eq(activityEvent.targetType, type), eq(activityEvent.targetId, opts.tokenId))
+    : eq(activityEvent.targetType, type);
   const [items, [totalRow]] = await Promise.all([
     db
       .select({

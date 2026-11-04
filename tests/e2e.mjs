@@ -168,6 +168,16 @@ check("unknown token rejected", r.status >= 400 || (await r.text()).includes("is
 check("change in updates log", (await (await manager.get("/foundations/updates")).text()).includes("colors.bg.base.canvas"));
 check("unknown section 404", (await visitor.get("/foundations/nope")).status === 404);
 
+// Components: public catalog, team-only tracking
+check("visitor sees components", (await (await visitor.get("/components")).text()).includes("Button"));
+check("visitor sees component detail", (await visitor.get("/components/cmp-button")).status === 200);
+check("visitor sees no component tracking", !(await (await visitor.get("/components/cmp-button")).text()).includes("Save tracking"));
+r = await visitor.post("/foundations/track", { tokenId: "cmp-button", webStatus: "done" });
+check("visitor can't track a component", r.status === 302 || r.status === 403);
+r = await contributor.post("/foundations/track", { tokenId: "cmp-button", webStatus: "in_review" });
+check("contributor tracks a component", r.status < 400);
+check("component progress filter", (await (await contributor.get("/components?view=list&platform=web&progress=in_review")).text()).replace(/<!-- -->/g, "").includes(">1 component<"));
+
 // Sign out
 r = await contributor.post("/sign-out", {});
 check("sign out", r.status === 302 && (await contributor.get("/tasks")).status === 302);

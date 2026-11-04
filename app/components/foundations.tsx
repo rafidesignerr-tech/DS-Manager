@@ -193,6 +193,13 @@ export const TRACK_OPTIONS = [
   { id: "done", label: "Done", tone: "completed" as StatusTone },
 ];
 
+/** Tracking platforms, shared with the server module (which can't be imported by UI code). */
+export const TRACK_PLATFORMS = [
+  { id: "design", label: "Design", column: "designStatus" },
+  { id: "web", label: "Web", column: "webStatus" },
+  { id: "mobile", label: "Mobile", column: "mobileStatus" },
+] as const;
+
 export function TrackBadge({ status }: { status: string }) {
   const o = TRACK_OPTIONS.find((x) => x.id === status) ?? TRACK_OPTIONS[0]!;
   return <StatusBadge tone={o.tone}>{o.label}</StatusBadge>;

@@ -4,7 +4,7 @@ import { POLICY } from "~/config/hub";
 import type { Database } from "./db";
 import { schema } from "./db";
 
-const { referenceItem, referenceGroup, referenceRelation } = schema;
+const { referenceItem, referenceGroup, referenceRelation, tokenTracking } = schema;
 export type ReferenceKind = "foundation" | "component" | "icon";
 
 export async function listGroups(db: Database, kind: ReferenceKind) {
@@ -32,6 +32,9 @@ export const referenceFiltersSchema = z.object({
   sort: z.enum(["title", "updated"]).catch("title"),
   dir: z.enum(["asc", "desc"]).catch("asc"),
   view: z.enum(["grid", "list", "atomic"]).catch("grid"),
+  /** Team-only tracking filter: a platform and a tracking status. */
+  platform: z.enum(["design", "web", "mobile"]).catch("design"),
+  progress: z.enum(["", "todo", "in_progress", "in_review", "done"]).catch(""),
   page: z.coerce.number().int().min(1).max(10_000).catch(1),
 });
 export type ReferenceFilters = z.infer<typeof referenceFiltersSchema>;
@@ -48,15 +51,26 @@ export function parseReferenceFilters(url: URL): ReferenceFilters {
     sort: orderSort || (p.get("sort") ?? undefined),
     dir: orderDir || (p.get("dir") ?? undefined),
     view: p.get("view") ?? undefined,
+    platform: p.get("platform") ?? undefined,
+    progress: p.get("progress") ?? "",
     page: p.get("page") ?? 1,
   });
+}
+
+/** Items whose tracking status for a platform matches; items without a row count as Todo. */
+function progressClause(platform: "design" | "web" | "mobile", progress: string): SQL {
+  const column = platform === "web" ? tokenTracking.webStatus : platform === "mobile" ? tokenTracking.mobileStatus : tokenTracking.designStatus;
+  if (progress === "todo") {
+    return sql`${referenceItem.id} not in (select ${tokenTracking.tokenId} from ${tokenTracking} where ${column} <> 'todo')`;
+  }
+  return sql`${referenceItem.id} in (select ${tokenTracking.tokenId} from ${tokenTracking} where ${column} = ${progress})`;
 }
 
 export async function listReferenceItems(
   db: Database,
   kind: ReferenceKind,
   filters: ReferenceFilters,
-  opts: { paginate: boolean; pageSize?: number } = { paginate: true },
+  opts: { paginate: boolean; pageSize?: number; tracking?: boolean } = { paginate: true },
 ) {
   const where = and(
     eq(referenceItem.kind, kind),
@@ -64,6 +78,7 @@ export async function listReferenceItems(
     filters.group ? eq(referenceItem.groupKey, filters.group) : undefined,
     filters.level ? eq(referenceItem.level, filters.level) : undefined,
     filters.status ? eq(referenceItem.status, filters.status) : undefined,
+    opts.tracking && filters.progress ? progressClause(filters.platform, filters.progress) : undefined,
   );
   const dir = filters.dir === "desc" ? desc : asc;
   const order = filters.sort === "updated" ? [dir(referenceItem.updatedAt)] : [dir(sql`lower(${referenceItem.title})`)];
