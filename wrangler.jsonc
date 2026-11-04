@@ -14,8 +14,8 @@
     {
       "binding": "DB",
       "database_name": "ds-hub-db",
-      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
-      "migrations_dir": "drizzle"
+   "database_id": "f2ab1a53-08de-4278-9175-3e052cd7be0c",
+"migrations_dir": "drizzle"
     }
   ],
   "r2_buckets": [
