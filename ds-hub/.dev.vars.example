@@ -1,7 +1,0 @@
-# Copy to .dev.vars for local development. Never commit .dev.vars.
-BETTER_AUTH_SECRET="generate-a-long-random-string"
-# Optional: real email delivery. Without it, emails are printed to the dev console.
-RESEND_API_KEY=""
-# Optional: Cloudflare Turnstile for the public feedback form.
-TURNSTILE_SITE_KEY=""
-TURNSTILE_SECRET_KEY=""
