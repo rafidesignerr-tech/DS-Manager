@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ds-hub",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "vars": {
+    "APP_NAME": "D.S Hub",
+    "PUBLIC_BASE_URL": "http://localhost:5173",
+    "EMAIL_FROM": "D.S Hub <no-reply@example.com>"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ds-hub-db",
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "r2_buckets": [
+    { "binding": "MEDIA", "bucket_name": "ds-hub-media" }
+  ]
+}
